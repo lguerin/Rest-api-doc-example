@@ -19,6 +19,31 @@ class UrlMappings {
             action = [GET:"listByAuthor"]
         }
 
+        // Custom controller with some constraints
+        "/api/custom/$bookId/$action.$format" {
+            controller = "restCustom"
+            constraints {
+                bookId nullable: false, blank: false
+            }
+        }
+        "/api/custom/$bookId/page/$pageId/$action.$format" {
+            controller = "restCustom"
+            constraints {
+                bookId nullable: false, blank: false
+                pageId nullable: false, blank: false
+            }
+        }
+        // Custom + grouping
+        group "/public", {
+            "/a"(controller:"restCustom", action:"a", format: "json")
+            "/b/$fullname/$numberOfBook.$format"(controller:"restCustom", action:"b") {
+                constraints {
+                    fullname nullable: false, blank: false
+                    numberOfBook nullable: false, blank: false
+                }
+            }
+        }
+
         "/"(view:"/index")
         "500"(view:'/error')
 	}
